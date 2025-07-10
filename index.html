@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>ZriiiStore</title>
+
+  <!-- Meta & Favicon -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/webp">
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Modal QRIS */
+    #qrisModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    #qrisModal .modal-content {
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+    }
+    #qrisModal img {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+    #qrisModal p {
+      color: #3498db;
+      font-weight: 600;
+      font-size: 16px;
+      margin-top: 12px;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    #qrisModal button.close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Form Style */
+    #donationForm {
+      margin-top: 20px;
+      text-align: left;
+    }
+    #donationForm label {
+      display: block;
+      color: #fff;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    #donationForm input,
+    #donationForm textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: none;
+      font-family: inherit;
+    }
+    #donationForm button {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Link Items */
+    .page-item-each {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      cursor: pointer;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- QRIS Modal -->
+  <div id="qrisModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeQRIS()">×</button>
+      <img src="assets/images/Qris.jpg" alt="QRIS Donasi">
+      <p>Scan QRIS untuk donasi</p>
+
+      <form id="donationForm" onsubmit="handleFormSubmit(event)">
+        <label for="name">Nama:</label>
+        <input type="text" id="name" name="name" placeholder="Nama kamu..." required>
+
+        <label for="phone">No HP:</label>
+        <input type="tel" id="phone" name="phone" placeholder="0812xxxxxxx" required
+               pattern="[0-9]{10,15}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+        <label for="message">Pesan:</label>
+        <textarea id="message" name="message" placeholder="Pesan atau ucapan..." rows="3" required></textarea>
+
+        <button type="submit">Kirim ke WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Background Animation -->
+  <section class="animated-background">
+    <div id="stars1"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="min-h-full flex-h-center" id="background_div">
+    <canvas id="bg-canvas" class="background-overlay"></canvas>
+    <div class="mt-48 page-full-wrap relative">
+      <img class="display-image m-auto" src="assets/images/1000641157.png" alt="Your Photo">
+      <h2 class="page-title page-text-color page-text-font mt-16 text-center">ZriiiStore</h2>
+
+      <div class="mt-24">
+        <!-- Instagram -->
+        <div class="page-item-wrap relative">
+          <div class="page-item-each" onclick="openLink('https://www.instagram.com/mhmdalfadzri')">
+            <i class="fab fa-instagram fa-xl link-each-icon"></i>
+            <span>Instagram – mhmdalfadzri</span>
+          </div>
+        </div>
+
+        <!-- GitHub -->
+        <div class="page-item-wrap relative">
+          <div class="page-item-each" onclick="openLink('https://github.com/mhmdalfadzri')">
+            <i class="fab fa-github fa-xl link-each-icon"></i>
+            <span>GitHub – mhmdalfadzri</span>
+          </div>
+        </div>
+
+        <!-- TikTok -->
+        <div class="page-item-wrap relative">
+          <div class="page-item-each" onclick="openLink('https://www.tiktok.com/@mhmdalfadzri')">
+            <i class="fab fa-tiktok fa-xl link-each-icon"></i>
+            <span>TikTok – mhmdalfadzri</span>
+          </div>
+        </div>
+
+        <!-- QRIS -->
+        <div class="page-item-wrap relative">
+          <div class="page-item-each" onclick="showQRIS()">
+            <i class="fas fa-qrcode fa-xl link-each-icon"></i>
+            <span>Donasi – QRIS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    function openLink(url) {
+      window.open(url, '_blank');
+    }
+
+    function showQRIS() {
+      document.getElementById('qrisModal').style.display = 'flex';
+    }
+
+    function closeQRIS() {
+      document.getElementById('qrisModal').style.display = 'none';
+    }
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (!/^[0-9]{10,15}$/.test(phone)) {
+        alert("Nomor HP harus berupa angka 10–15 digit.");
+        return;
+      }
+
+      const targetWA = '6283175752224';
+      const text = `Donasi Masuk%0ANama: ${encodeURIComponent(name)}%0ANo HP: ${encodeURIComponent(phone)}%0APesan: ${encodeURIComponent(message)}`;
+      const link = `https://wa.me/${targetWA}?text=${text}`;
+
+      window.open(link, '_blank');
+      closeQRIS();
+    }
+  </script>
+</body>
+</html>
